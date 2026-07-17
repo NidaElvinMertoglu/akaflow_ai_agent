@@ -2,7 +2,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from src.db_manager import init_db
 import logging
 
-# Loglama ayarı: Otomasyon işlemlerini de takip edelim
+# Loglama ayarları
 logging.basicConfig(
     filename='app.log',
     level=logging.INFO,
@@ -17,7 +17,7 @@ def job():
     except Exception as e:
         logging.error(f"Veritabanı güncellenirken hata oluştu: {e}")
 
-# Zamanlayıcıyı ayarla
+# Zamanlayıcıyı ayarlama
 scheduler = BlockingScheduler()
 # Her gece saat 03:00'te çalışması için
 scheduler.add_job(job, 'cron', hour=3, minute=0)
