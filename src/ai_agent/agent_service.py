@@ -14,7 +14,7 @@ llm = ChatGoogleGenerativeAI(
     temperature=0
 )
 
-db = SQLDatabase.from_uri("sqlite:///akaflow_mock.db")
+db = SQLDatabase.from_uri("sqlite:///data/student_data.db")
 
 
 agent_executor = create_sql_agent(
