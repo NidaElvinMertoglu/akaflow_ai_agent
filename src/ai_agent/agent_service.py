@@ -14,7 +14,9 @@ llm = ChatGoogleGenerativeAI(
     temperature=0
 )
 
-db = SQLDatabase.from_uri("sqlite:///data/student_data.db")
+db = SQLDatabase.from_uri(
+    "sqlite:///file:data/student_data.db?mode=ro&uri=true"
+)
 
 
 agent_executor = create_sql_agent(

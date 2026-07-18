@@ -21,10 +21,25 @@ def get_student_prediction(student_id: int):
     logging.info(f"Tahmin isteği alındı: ogrenci_id={student_id}")
 
     conn = sqlite3.connect(DB_PATH)
-    query = f"SELECT * FROM students WHERE ogrenci_id = {student_id}"
-    student_df = pd.read_sql(query, conn)
-    conn.close()
+    #injection hatası verdiği için bu 2 satır yerine alt 2 satırı kullandım
+    #query = f"SELECT * FROM students WHERE ogrenci_id = {student_id}"
+    #student_df = pd.read_sql(query, conn)
+    
+    query = """
+        SELECT s.*, 
+               p.toplam_ucret, p.odenen_tutar, p.kalan_borc, 
+               p.taksit_sayisi, p.son_odeme_gecikme_gun_sayisi, 
+               p.odeme_yontemi,
+               a.devamsizlik_saati, a.devamsizlik_orani, 
+               a.ust_uste_devamsizlik_sayisi
+        FROM students s
+        JOIN payments p ON s.ogrenci_id = p.ogrenci_id
+        JOIN attendance a ON s.ogrenci_id = a.ogrenci_id
+        WHERE s.ogrenci_id = ?
+    """
+    student_df = pd.read_sql(query, conn, params=(student_id,))
 
+    conn.close()
     if student_df.empty:
         logging.warning(f"Öğrenci bulunamadı: ogrenci_id={student_id}")  # Log: Hata durumu
         return {"error": "Öğrenci bulunamadı"}
